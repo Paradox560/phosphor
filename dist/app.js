@@ -11,7 +11,7 @@ const state = {
   source: 'text', preset: 'heart', image: null, imageURL: null, base: null, signal: null,
   transition: null, dimensions: new Map(), last: 0, lastReadout: 0, dirty: true,
 };
-const COLORS = {mint:'#8effd0', violet:'#b4a3ff', grid:'#1e302c', axis:'#3a5148', text:'#80948d', white:'#e1fff1', travel:'#756c91'};
+const COLORS = {mint:'#79ffff', violet:'#e0da87', grid:'#1c5054', axis:'#3b7a7e', text:'#7eb9ba', white:'#e3ffff', travel:'#aca5a0'};
 let wordTimer, imageTimer, uploadSequence = 0;
 
 function message(text, error = false) {
@@ -145,7 +145,7 @@ function drawScope() {
   ctx.font = '10px "SFMono-Regular", Consolas, monospace';
   ctx.textBaseline = 'middle';
   if (state.grid) {
-    ctx.strokeStyle = COLORS.grid; ctx.lineWidth = 0.7; ctx.beginPath();
+    ctx.strokeStyle = '#0b393b'; ctx.lineWidth = 1; ctx.beginPath();
     for (let i=0;i<=10;i++) {
       const x = b.left+b.width*i/10, y = b.top+b.height*i/10;
       ctx.moveTo(x,b.top); ctx.lineTo(x,b.bottom); ctx.moveTo(b.left,y); ctx.lineTo(b.right,y);
@@ -158,7 +158,7 @@ function drawScope() {
   [-5,0,5].forEach(v => ctx.fillText(`${v>0?'+':''}${v}`, sx(v/5), b.bottom+16));
   ctx.textAlign='right';[-5,0,5].forEach(v=>ctx.fillText(`${v>0?'+':''}${v}`,b.left-10,sy(v/5)));
   ctx.textAlign='left';ctx.fillText('Y / V',b.left,b.top-12);
-  ctx.textAlign='right';ctx.fillText('X / V',b.right,b.bottom+30);
+  ctx.textAlign='center';ctx.fillText('X / V',b.left+b.width/2,b.bottom+30);
   ctx.save();ctx.beginPath();ctx.rect(b.left,b.top,b.width,b.height);ctx.clip();
   // All three views read the same time-indexed voltage arrays.
   const cursor=Math.min(n-1,Math.floor(state.phase*n)), buckets=14;
@@ -172,14 +172,14 @@ function drawScope() {
     }
     if(!state.cycles && i>cursor) continue;
     const age=(state.phase-i/n+1)%1;
-    const brightness=Math.exp(-age/(state.persistence*0.85));
+    const brightness=Math.exp(-age/(state.persistence*1.15));
     const bin=Math.min(buckets-1,Math.floor(brightness*(buckets-1)));
     paths[bin].moveTo(x0,y0);paths[bin].lineTo(x1,y1);
   }
   ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=COLORS.mint;
   for(let j=0;j<buckets;j++) {
-    ctx.globalAlpha=(0.025+j/(buckets-1)*0.95);
-    ctx.shadowColor=COLORS.mint;ctx.shadowBlur=j>5?8:2;ctx.lineWidth=1.65;
+    ctx.globalAlpha=(0.035+j/(buckets-1)*0.965);
+    ctx.shadowColor=COLORS.mint;ctx.shadowBlur=j>5?11:5;ctx.lineWidth=2.3;
     ctx.stroke(paths[j]);
   }
   ctx.globalAlpha=.4;ctx.shadowBlur=0;ctx.strokeStyle=COLORS.travel;ctx.setLineDash([3,5]);ctx.lineWidth=.8;ctx.stroke(travelPath);ctx.setLineDash([]);
