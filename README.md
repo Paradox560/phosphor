@@ -2,6 +2,8 @@
 
 A browser-local oscilloscope simulator. Type a word, choose a preset, or upload a line drawing. The app generates synchronized horizontal and vertical voltage samples and animates the same samples on an X–Y display.
 
+Published on [Spacefast](https://phosphor-lab.space.fast/). Publish updates from `dist/` to the existing linked Space, preserving its access policy. Local Spacefast credentials and deployment metadata are excluded from this repository.
+
 ## Run locally
 
 ```sh
