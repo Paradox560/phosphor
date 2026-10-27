@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111512">
+  <meta name="description" content="Turn words and images into electrical signals. Explore how two waveforms draw an image on an X–Y oscilloscope.">
+  <title>Phosphor — X–Y Signal Lab</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="icon-wave" viewBox="0 0 24 24"><path d="M2 12h4l3-7 6 14 3-7h4"/></symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+      <symbol id="icon-restart" viewBox="0 0 24 24"><path d="M4 5v5h5M4.5 10a8 8 0 1 1 .3 5"/></symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+      <symbol id="icon-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+      <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Phosphor home"><span class="brand-mark"><svg aria-hidden="true"><use href="#icon-wave"/></svg></span><span>phosphor<span class="brand-period">.</span></span></a>
+      <span class="site-descriptor">X–Y signal lab</span>
+      <button class="help-button" id="how-it-works" type="button"><svg aria-hidden="true"><use href="#icon-info"/></svg>How it works</button>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><h1 id="page-title">Make waves. Draw something.</h1><p>Two signals. One moving dot. Your words and images, written in light.</p></div>
+        <span class="experiment-note"><span class="tiny-dot"></span>An interactive oscilloscope</span>
+      </section>
+
+      <div class="lab-layout">
+        <section class="instrument" aria-label="Oscilloscope and electrical signal visualization">
+          <header class="instrument-toolbar">
+            <div class="instrument-title"><span class="indicator-light"></span><h2>X–Y display</h2><span class="mode-tag">VECTOR MODE</span></div>
+            <div class="playback-buttons"><span id="status" class="live-status">Running</span><button id="play" class="icon-button playback-button" type="button" aria-label="Pause animation" title="Pause animation"><svg aria-hidden="true"><use href="#icon-pause"/></svg></button><button id="restart" class="icon-button" type="button" aria-label="Restart cycle" title="Restart cycle"><svg aria-hidden="true"><use href="#icon-restart"/></svg></button></div>
+          </header>
+
+          <div class="scope-screen">
+            <canvas id="scope" aria-label="X–Y oscilloscope drawing made by the horizontal and vertical voltage signals">Your browser needs canvas support to display the oscilloscope.</canvas>
+            <div class="screen-label screen-label-top">CH 1 × CH 2</div>
+            <div class="screen-label screen-label-bottom">±5 V <span>SIMULATED</span></div>
+          </div>
+
+          <div class="readout-strip" aria-label="Current signal readings">
+            <div><span class="channel-dot x-dot"></span><span>X</span><output id="x-value">0.00 V</output></div>
+            <div><span class="channel-dot y-dot"></span><span>Y</span><output id="y-value">0.00 V</output></div>
+            <div class="phase-readout"><span>Cycle</span><output id="phase-value">0%</output></div>
+            <div class="sample-readout"><output id="sample-count">0 samples</output></div>
+          </div>
+
+          <div class="waveform-section">
+            <div class="waveform-heading"><h3>The signals behind the drawing</h3><span>Voltage over time</span></div>
+            <div class="waveform-row x-channel"><div class="waveform-label"><span>CH 1</span><strong>X</strong><small>horizontal</small></div><div class="waveform-canvas"><canvas id="wave-x" aria-label="Channel 1 horizontal voltage over one complete drawing cycle"></canvas></div></div>
+            <div class="waveform-row y-channel"><div class="waveform-label"><span>CH 2</span><strong>Y</strong><small>vertical</small></div><div class="waveform-canvas"><canvas id="wave-y" aria-label="Channel 2 vertical voltage over one complete drawing cycle"></canvas></div></div>
+          </div>
+          <div class="timeline"><label for="progress">Scrub through cycle</label><input id="progress" type="range" min="0" max="1000" value="0" step="1" aria-label="Scrub through cycle"><span aria-hidden="true">100%</span></div>
+        </section>
+
+        <aside class="control-panel" aria-label="Drawing and signal controls">
+          <section class="source-section" aria-labelledby="source-heading">
+            <div class="section-heading"><h2 id="source-heading">Create your signal</h2><span class="section-caption">INPUT</span></div>
+            <div class="source-tabs" role="tablist" aria-label="Drawing input type">
+              <button id="text-tab" data-source="text" class="source-tab active" role="tab" aria-selected="true" aria-controls="text-panel" type="button">Text</button>
+              <button id="image-tab" data-source="image" class="source-tab" role="tab" aria-selected="false" aria-controls="image-panel" type="button">Image</button>
+              <button id="presets-tab" data-source="presets" class="source-tab" role="tab" aria-selected="false" aria-controls="preset-panel" type="button">Presets</button>
+            </div>
+            <div id="text-panel" class="source-content" role="tabpanel" aria-labelledby="text-tab">
+              <label class="field-label" for="word-input">What should we draw?</label>
+              <div class="word-field"><input id="word-input" type="text" value="HELLO" maxlength="18" autocomplete="off" spellcheck="false" aria-describedby="word-hint"><svg aria-hidden="true"><use href="#icon-wave"/></svg></div>
+              <p class="field-hint" id="word-hint">Up to 18 characters. A little word goes a long way.</p>
+              <button id="generate" class="primary-button" type="button">Generate signals<svg aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+            </div>
+            <div id="image-panel" class="source-content" role="tabpanel" aria-labelledby="image-tab" hidden>
+              <input id="file-input" class="visually-hidden" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+              <button id="dropzone" class="dropzone" type="button"><svg aria-hidden="true"><use href="#icon-upload"/></svg><span id="upload-label">Upload a line drawing</span><small>PNG, JPG, WebP, or SVG · or drop here</small><img id="image-preview" alt="Your uploaded source image" hidden></button>
+              <p class="field-hint">Simple, high-contrast outlines work best.</p>
+              <div class="range-control compact"><div class="control-label"><label for="threshold">Threshold</label><output id="threshold-value" for="threshold">145</output></div><input id="threshold" type="range" min="30" max="230" value="145" step="1"></div>
+              <div class="range-control compact"><div class="control-label"><label for="detail">Detail</label><output id="detail-value" for="detail">60%</output></div><input id="detail" type="range" min="20" max="100" value="60" step="1"></div>
+            </div>
+            <div id="preset-panel" class="source-content" role="tabpanel" aria-labelledby="presets-tab" hidden>
+              <p class="field-label">Start with a familiar shape</p>
+              <div class="preset-grid">
+                <button data-preset="heart" type="button"><svg viewBox="0 0 52 36" aria-hidden="true"><path d="M26 31 9 16C-1 5 16-3 26 10 36-3 53 5 43 16Z"/></svg><span>Heart</span></button>
+                <button data-preset="saturn" type="button"><svg viewBox="0 0 52 36" aria-hidden="true"><circle cx="26" cy="18" r="12"/><ellipse cx="26" cy="18" rx="24" ry="6" transform="rotate(-22 26 18)"/></svg><span>Saturn</span></button>
+                <button data-preset="butterfly" type="button"><svg viewBox="0 0 52 36" aria-hidden="true"><path d="M26 17C10-9 1 6 9 20c-5 17 13 15 17 2 4 13 22 15 17-2C51 6 42-9 26 17Zm0 0v11m0-11-5-8m5 8 5-8"/></svg><span>Butterfly</span></button>
+                <button data-preset="wave" type="button"><svg viewBox="0 0 52 36" aria-hidden="true"><path d="M1 18C9-5 17-5 26 18S43 41 51 18"/></svg><span>Wave</span></button>
+              </div>
+            </div>
+            <p id="message" class="message" role="status" aria-live="polite">Your drawing is ready. Make it your own.</p>
+          </section>
+
+          <section class="signal-section" aria-labelledby="signal-heading">
+            <div class="section-heading"><h2 id="signal-heading">Tune the signals</h2><span class="section-caption">CONTROL</span></div>
+            <div class="range-control"><div class="control-label"><label for="frequency">Drawing speed</label><output id="frequency-value" for="frequency">0.4 Hz</output></div><input id="frequency" type="range" min="0.1" max="2" value="0.4" step="0.1"><div class="range-endpoints"><span>Slow</span><span>Fast</span></div></div>
+            <div class="gain-controls">
+              <div class="range-control x-gain"><div class="control-label"><label for="gain-x"><span class="channel-dot x-dot"></span>X gain</label><output id="gain-x-value" for="gain-x">1.00×</output></div><input id="gain-x" type="range" min="0.2" max="1.3" value="1" step="0.05"></div>
+              <div class="range-control y-gain"><div class="control-label"><label for="gain-y"><span class="channel-dot y-dot"></span>Y gain</label><output id="gain-y-value" for="gain-y">1.00×</output></div><input id="gain-y" type="range" min="0.2" max="1.3" value="1" step="0.05"></div>
+            </div>
+            <div class="range-control"><div class="control-label"><label for="persistence">Phosphor persistence</label><output id="persistence-value" for="persistence">65%</output></div><input id="persistence" type="range" min="0.05" max="1" value="0.65" step="0.05"><div class="range-endpoints"><span>Short trail</span><span>Long glow</span></div></div>
+          </section>
+
+          <section class="display-section" aria-label="Display settings">
+            <label class="toggle-label" for="blanking"><span>Blank between strokes<small>Lift the beam between lines</small></span><input id="blanking" type="checkbox" checked><span class="toggle" aria-hidden="true"></span></label>
+            <div class="display-options"><label for="travel"><input id="travel" type="checkbox"><span>Show travel</span></label><label for="grid"><input id="grid" type="checkbox" checked><span>Grid</span></label></div>
+          </section>
+          <button id="download" class="export-button" type="button"><svg aria-hidden="true"><use href="#icon-download"/></svg>Export signals<span>CSV</span></button>
+        </aside>
+      </div>
+      <footer class="lab-footer"><p><span class="channel-dot x-dot"></span>X moves the beam sideways. <span class="channel-dot y-dot"></span>Y moves it up and down. Together, they draw.</p><span>A simulation, sparked by analog.</span></footer>
+    </main>
+  </div>
+
+  <dialog id="info-dialog" aria-labelledby="info-title">
+    <div class="dialog-header"><span class="brand-mark"><svg aria-hidden="true"><use href="#icon-wave"/></svg></span><button id="close-info" class="icon-button" type="button" aria-label="Close explanation"><svg aria-hidden="true"><use href="#icon-close"/></svg></button></div>
+    <h2 id="info-title">A drawing is two signals<br>moving together.</h2>
+    <p>On an oscilloscope in X–Y mode, one voltage controls the beam’s horizontal position and another controls its vertical position. Changing both voltages over time traces a shape.</p>
+    <p class="reference-link">Explore the principle in <a href="https://www.tek.com/en/support/faqs/does-tds1000-2000-series-have-xy-display-format-addition-yt" target="_blank" rel="noopener noreferrer">Tektronix’s guide to X–Y display mode ↗</a>.</p>
+    <div class="explanation-channels"><div><span class="channel-dot x-dot"></span><strong>X(t)</strong><span>Horizontal voltage</span></div><div><span class="channel-dot y-dot"></span><strong>Y(t)</strong><span>Vertical voltage</span></div></div>
+    <p>Phosphor turns your text or image into a path, samples positions along it, and uses those positions as voltage signals. The two plots show one complete drawing cycle. Their moving cursor marks the same instant as the dot on the display.</p>
+    <p><strong>Try the controls.</strong> Drawing speed changes how quickly the path repeats. X and Y gain stretch the drawing. Persistence lets earlier parts of the trace linger. Blanking hides the beam while it travels between separate strokes.</p>
+    <div class="simulation-note"><strong>This is a visual simulation.</strong><p>Voltages use a nominal ±5 V scale and playback is slowed so you can follow the beam. It does not output electrical signals or control hardware. CSV export contains the sampled X, Y, and blanking values for exploration.</p></div>
+  </dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
