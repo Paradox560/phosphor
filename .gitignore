@@ -2,3 +2,12 @@
 *.tar.gz
 *.tar
 .sites/
+.openai/
+.agents/
+.env
+.env.*
+.spacefast/
+.spacefast/state.json
+/.spacefast-*
+.spacefast/.spacefast-*
+.spacefast/.space-link-*.tmp
