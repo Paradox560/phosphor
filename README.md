@@ -17,6 +17,7 @@ Open http://127.0.0.1:4838. No installation, build process, or backend is requir
 - Heart, Saturn, butterfly, and wave presets.
 - Synchronized X/Y time plots, a moving beam, pause, restart, and cycle scrubbing.
 - Independent voltage gains, cycle frequency, phosphor persistence, beam blanking, and travel/grid toggles.
+- A vintage bench-oscilloscope faceplate with a recessed phosphor display, tactile pushbuttons, and rotary signal controls. Drag a knob up/right to increase its value, down/left to decrease; focused knobs also support arrow keys, Home/End, and the mouse wheel.
 - CSV export of one cycle: time_s, x_volts, y_volts, beam_on.
 - Responsive layout, keyboard controls, and reduced-motion support.
 
@@ -36,6 +37,7 @@ The model follows the usual oscilloscope X–Y convention: channel 1 drives the 
 node --test tests/signals.test.mjs
 node --check dist/app.js
 node --check dist/signals.js
+node --check dist/knobs.js
 ```
 
 The fixture in `tests/fixtures/bolt.svg` exercises the browser upload and trace path.
