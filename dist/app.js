@@ -1,4 +1,5 @@
 import { textToStrokes, presetStrokes, imageToStrokes, buildSignal } from './signals.js';
+import { initRotaryControls } from './knobs.js';
 
 const $ = (id) => document.getElementById(id);
 const scope = $('scope'), waveX = $('wave-x'), waveY = $('wave-y');
@@ -298,4 +299,4 @@ const resize = new ResizeObserver(()=>{
   [scope,waveX,waveY].forEach(sizeCanvas);state.transition=null;fitSignal();state.dirty=true;
 });
 [scope,waveX,waveY].forEach(canvas=>{sizeCanvas(canvas);resize.observe(canvas);});
-generateText();syncPlayButton();requestAnimationFrame(frame);
+initRotaryControls();generateText();syncPlayButton();requestAnimationFrame(frame);
